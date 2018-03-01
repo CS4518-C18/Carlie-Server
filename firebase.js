@@ -1,10 +1,13 @@
 var admin = require("firebase-admin");
-var serviceAccount = require("./carliewpi-ac614-firebase-adminsdk-qhsry-1289cb185e.json");
 
+
+function getServiceAccount() {
+	return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+}
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
-	databaseURL: "https://carliewpi-ac614.firebaseio.com"
+	databaseURL: process.env.FIREBASE_DATABASEURL
 });
 
 var db = admin.database();
