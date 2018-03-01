@@ -5,8 +5,6 @@
 ### Prerequisites
 - Node.js v8.4.0
 
-- A Firebase admin JSON file. Edit `databaseURL` and file URL in `firebase.js`
-
 ### Installing
 To install the dependencies, run the following command:
 
@@ -14,21 +12,19 @@ To install the dependencies, run the following command:
 
 ## Running
 
-To start the server, run the following command:
+To start the server, a firebase admin SKD account is required. Follow [this](https://firebase.google.com/docs/admin/setup) guide, put the JSON file with your service account credentials under project directory, and update `firebase.js` accordingly.
+
+Then run the following command:
 
 ```npm start```
 
 ### API Usage
 
-To request a new trip, send a GET request to 
-
-`http://localhost:3000/passengers/:passengerId/trips/new`
+To request a new trip, send a GET request to `http://localhost:3000/passengers/:passengerId/trips/new`
 
 where `:passengerId` is the trip Passenger's ID, which is also his/her Firebase ID. 
 
-If you deployed it on Heroku, GET from 
-
-`http://:your-app-name.herokuapp.com/passengers/:passengerId/trips/new`
+If you deployed it on Heroku, GET from `http://:your-app-name.herokuapp.com/passengers/:passengerId/trips/new`
 
 where `:your-app-name` is your heroku app's name.
 
@@ -53,6 +49,8 @@ The server itself does not modify data in firebase. It simply keeps track of the
 ## Deployment
 
 To deploy the server on heroku, follow [this](https://devcenter.heroku.com/articles/git) guide. 
+
+Also, in order to not leak your Firebase admin SDK credentials, add your JSON file into `.gitignore`, set environmental variable `FIREBASE_DATABASEURL` to your firebase database url, and `FIREBASE_SERVICE_ACCOUNT` to your JSON file as a string.
 
 ## Authors
 
