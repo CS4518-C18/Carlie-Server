@@ -1,44 +1,44 @@
 var express = require('express');
 var path = require('path');
-//var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var ref = require('./firebase')
 
-//var requestTrip = require('./routes/requestTrip');
 
-
-const MAX_SHUTTLE = 3
-const MAX_SEAT = 2
+let MAX_SHUTTLE = 3
+let MAX_SEAT = 2
 var num_shuttle = 0
 var shuttle_list = {}
 
 
-ref.child('shuttles').once("value", function(snap) {
-	// initialize
-	shuttle_list['shuttle1'] = {passengers: {}, num: 0}
-	shuttle_list['shuttle2'] = {passengers: {}, num: 0}
-	shuttle_list['shuttle3'] = {passengers: {}, num: 0}
+// initialize
+shuttle_list['shuttle1'] = {passengers: {}, num: 0}
+shuttle_list['shuttle2'] = {passengers: {}, num: 0}
+shuttle_list['shuttle3'] = {passengers: {}, num: 0}
 
-	num_shuttle = snap.numChildren();
+
+ref.child('shuttles').once("value", snap => {
+	num_shuttle = snap.numChildren()
 	snap.forEach(shuttle => {
 		shuttle_list[shuttle.key] = {passengers: shuttle.child('trips').val(), num: shuttle.child('trips').numChildren()}
+
+		let shuttleRef = ref.child('shuttles').child(shuttle.key).child('trips')
+		shuttleRef.on("child_removed", child => {
+			delete shuttle_list[shuttle.key].passengers[child.key]
+			shuttle_list[shuttle.key].num -= 1
+		})
+		shuttleRef.on("child_added", child => {
+			shuttle_list[shuttle.key].passengers[child.key] = child
+			shuttle_list[shuttle.key].num += 1
+		})
+		
 	})
-	//console.log(shuttle_list)
-	//test()
-});
+})
 
-
-
-function test () {
-	requestTrip('p1', null)
-	requestTrip('p3', null)
-	requestTrip('p6', null)
-}
 
 function requestTripHandler(req, res) {
-  	res.send(requestTrip(req.params['passengerId']))
+	res.send(requestTrip(req.params['passengerId']))
 }
 
 function requestTrip (passengerId) {
@@ -87,7 +87,6 @@ function assignTrip() {
 		} 
 		if (value.num < MAX_SEAT) {
 			shuttleId = key
-			shuttle_list[key] = value + 1
 			finished = true
 		}
 	})
