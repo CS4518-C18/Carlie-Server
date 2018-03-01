@@ -5,6 +5,8 @@
 ### Prerequisites
 - Node.js v8.4.0
 
+- A Firebase admin JSON file. Edit `databaseURL` and file URL in `firebase.js`
+
 ### Installing
 To install the dependencies, run the following command:
 
