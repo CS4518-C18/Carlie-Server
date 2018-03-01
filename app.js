@@ -7,7 +7,7 @@ var ref = require('./firebase')
 
 
 let MAX_SHUTTLE = 3
-let MAX_SEAT = 2
+let MAX_SEAT = 6
 var num_shuttle = 0
 var shuttle_list = {}
 
