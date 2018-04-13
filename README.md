@@ -42,7 +42,7 @@ The response is a JSON object, which contains:
 
 Both of the two attributes are string. `shuttleId` is the shuttle ID the requesting trip is assigned to. `status` is either `existed`, meaning the trip already exists and is ongoing, or `new`, meaning the trip is new. If the trip already exists, `shuttleId` will be the shuttle ID of the existing trip.
 
-### What Happened Inside?
+### What is happening?
 
 The server itself does not modify data in firebase. It simply keeps track of the environment and assign passengers to shuttles without passenger clients assigning themselves, thus avoids race condition. 
 
@@ -51,6 +51,9 @@ The server itself does not modify data in firebase. It simply keeps track of the
 To deploy the server on heroku, follow [this](https://devcenter.heroku.com/articles/git) guide. 
 
 Also, in order to not leak your Firebase admin SDK credentials, add your JSON file into `.gitignore`, set environmental variable `FIREBASE_DATABASEURL` to your firebase database url, and `FIREBASE_SERVICE_ACCOUNT` to your JSON file as a string.
+
+## To Do
+Race condition can still happen. If a passeneger asks for a trip, but hasn't gotten the result (due to poor network connection) or hasn't updated firebase yet, another passeneger might get assigned to the same shuttle even though it is full. A placeholder should be implemented to reserve the spot and expire after a short period of time.
 
 ## Authors
 
